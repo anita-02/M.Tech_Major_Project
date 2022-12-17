@@ -1,10 +1,8 @@
 from collections import Counter
 import matplotlib.pyplot as plt
 import numpy as np
-# import scipy
 from scipy.signal import butter, filtfilt
 import math
-# import
 
 def butter_lowpass_filter(data, cutoff, fs, order):
     nyq = 0.5 * fs
