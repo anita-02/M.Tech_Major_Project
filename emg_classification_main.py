@@ -47,7 +47,7 @@ if __name__ == '__main__':
     emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_4, feature_label_ch_1_to_4, channel_names_ch_1_to_4
 
     z = pca_analysis(emg_data, emg_label, emg_channels, pca_features)
-    emg_svm(z, emg_label, 0.6)
+    emg_svm(z, emg_label, 0.8)
     print("Done")
 
     # X, Y = pca_spectrum_data(spectrum_data_dict, sub_names)
