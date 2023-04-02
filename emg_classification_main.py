@@ -1,6 +1,6 @@
-from utility_functions import get_data_dict, extract_feature, pca_analysis
+from emg_utility_functions import get_data_dict, extract_feature, pca_analysis
+from plot_emg_svm import emg_svm
 import numpy as np
-
 
 if __name__ == '__main__':
     folder_location_ch1_2 = 'D:/MtechProject_2023/EMG_spectrum_time_data_text_files/EMG_spectrum_ch1_2/'
@@ -12,9 +12,7 @@ if __name__ == '__main__':
     channel_names_ch5 = ['ch5: Eye']
 
     start_point, stop_point, window_size = 500, 5000, 300
-    pca_features = 3
-
-
+    pca_features = 2
 
     sub_names_ch1_2, spectrum_data_dict_ch1_2 = get_data_dict(folder_location_ch1_2)
     X_ch1_2, Y_ch1_2, feature_vectors_norm_ch_1_2, feature_label_ch1_2 = extract_feature(spectrum_data_dict_ch1_2,
@@ -43,13 +41,13 @@ if __name__ == '__main__':
     feature_label_ch_3_to_5 = np.append(feature_label_ch3_4, feature_label_ch5 + 2, axis=0)
     channel_names_ch_3_to_5 = channel_names_ch3_4 + channel_names_ch5
 
-    # z = pca_analysis(feature_vectors_norm_ch_1_2, feature_label_ch1_2, channel_names_ch1_2, pca_features)
-    # z = pca_analysis(feature_vectors_norm_ch3_4, feature_label_ch3_4, channel_names_ch3_4, pca_features)
-    # z = pca_analysis(feature_vectors_norm_ch_3_to_5, feature_label_ch_3_to_5, channel_names_ch_3_to_5, pca_features)
-    # z = pca_analysis(feature_vectors_norm_ch_1_to_4, feature_label_ch_1_to_4, channel_names_ch_1_to_4, pca_features)
-    z = pca_analysis(feature_vectors_norm_ch_1_to_5, feature_label_ch_1_to_5, channel_names_ch_1_to_5, pca_features)
+    # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_2, feature_label_ch1_2, channel_names_ch1_2
+    # emg_data, emg_label, emg_channels = feature_vectors_norm_ch3_4, feature_label_ch3_4, channel_names_ch3_4
+    # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_3_to_5, feature_label_ch_3_to_5, channel_names_ch_3_to_5
+    emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_4, feature_label_ch_1_to_4, channel_names_ch_1_to_4
 
-    # svm_my(z, feature_label_ch3_4)
+    z = pca_analysis(emg_data, emg_label, emg_channels, pca_features)
+    emg_svm(z, emg_label, 0.5)
     print("Done")
 
     # X, Y = pca_spectrum_data(spectrum_data_dict, sub_names)
