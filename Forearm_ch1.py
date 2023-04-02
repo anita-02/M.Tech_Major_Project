@@ -24,7 +24,7 @@ ch1_data = []
 forearm_data = []
 avg_noise = 0
 # "C:\Users\anita\OneDrive\Desktop\forearm_front_ch1_all.txt"
-with open("C:/Users/anita/OneDrive/Desktop/EMG_signal_2000_sampling/Thumb_muscle_up_ch1_2000_all.txt") as f:
+with open("D:/M.Tech/examples-of-electromyograms-1.0.0/emg_healthy.txt") as f:
     for line in f:
         # print(line)
         a = line.strip().split()
