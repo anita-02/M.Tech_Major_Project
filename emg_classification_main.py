@@ -10,7 +10,9 @@ if __name__ == '__main__':
 
     folder_location_ch5 = 'D:/MtechProject_2023/EMG_spectrum_time_data_text_files/EMG_spectrum_ch5/'
     channel_names_ch5 = ['ch5: Eye']
-
+    # start_point: this is stating frequency , freq domain sampling rate : 1/0.06, start freq: 500 * 0.06 = 30Hz
+    # feature width = window_size*0.06 , ex: 300 * 0.06 = 18Hz
+    # end point: 5000*0.06 = 300Hz
     start_point, stop_point, window_size = 500, 5000, 300
     pca_features = 2
 
@@ -46,12 +48,8 @@ if __name__ == '__main__':
     # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_3_to_5, feature_label_ch_3_to_5, channel_names_ch_3_to_5
     emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_4, feature_label_ch_1_to_4, channel_names_ch_1_to_4
 
-    z = pca_analysis(emg_data, emg_label, emg_channels, pca_features)
-    emg_svm(z, emg_label, 0.8)
+    emg_data_pca_components = pca_analysis(emg_data, emg_label, emg_channels, pca_features)
+    if pca_features == 2:
+        emg_svm(emg_data_pca_components, emg_label, 0.8)
     print("Done")
 
-    # X, Y = pca_spectrum_data(spectrum_data_dict, sub_names)
-    # print(len(data_dict))
-    # X, Y = pca_data_time(data_dict, sub_names)
-    # print(len(X))
-    # pca_analysis(X, Y, channel_names[0], channel_names[1])

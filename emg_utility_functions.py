@@ -112,7 +112,8 @@ def pca_analysis(X, Y, ch, n_features=3):
         plt.ylabel('principal component 2')
     plt.legend(loc="best", shadow=False, scatterpoints=1)
     plt.title('Principal Component Analysis(PCA) for EMG Data: Dimensionality reduction')
-    # plt.show()
+    if n_features == 2:
+        plt.show()
     print("Done")
     return z
 
