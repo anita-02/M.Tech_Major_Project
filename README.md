@@ -1,2 +1,2 @@
-# Third_Sem_Project for M.Tech Degree.
+# M.Tech Final Project
 In this project we are processing EMG data.
