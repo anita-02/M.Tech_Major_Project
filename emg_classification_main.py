@@ -68,5 +68,5 @@ if __name__ == '__main__':
 #         else:
 #             emg_svm(emg_data_pca_components, emg_label, 200, is_feature)
         emg_svm(emg_data_pca_components, emg_label, 200)
-        emg_svm(emg_data[:,0:2], emg_label, 200)
+        emg_svm(emg_data[:,0:2], emg_label, 200, true)
     print("Done")
