@@ -101,21 +101,56 @@ def pca_analysis(X, Y, ch, n_features=3):
         for color, i, target_name in zip(colors_ch, ch_label, ch):
             ax.scatter(z[Y == i, 0], z[Y == i, 1], z[Y == i, 2], color=color, alpha=0.8,
                        label=target_name)
-        ax.set_xlabel('principal component 1')
-        ax.set_ylabel('principal component 2')
-        ax.set_zlabel('principal component 3')
+        ax.set_xlabel('PCA component 1')
+        ax.set_ylabel('PCA component 2')
+        ax.set_zlabel('PCA component 3')
     elif n_features == 2:
         for color, i, target_name in zip(colors_ch, ch_label, ch):
             plt.scatter(z[Y == i, 0], z[Y == i, 1], color=color, alpha=0.8,
                         label=target_name)
-        plt.xlabel('principal component 1')
-        plt.ylabel('principal component 2')
+        plt.xlabel('PCA component 1')
+        plt.ylabel('PCA component 2')
     plt.legend(loc="best", shadow=False, scatterpoints=1)
     plt.title('Principal Component Analysis(PCA) for EMG Data: Dimensionality reduction')
     if n_features == 3:
         plt.show()
     print("Done")
     return z
+
+
+def plot_emg_features(X, Y, ch, n_features=3):
+    # pca = PCA(n_components=n_features)
+    # pca.fit(X)
+    # z = pca.transform(X)
+    # n_comp = pca.components_
+    # plt.figure()
+    # plt.plot(X[:, 0], X[:, 1])
+    ch_label = []
+    for j, c in enumerate(ch):
+        ch_label.append(j)
+
+    fig = plt.figure()
+    colors = ["navy", "cyan", "magenta", "green", "red", "yellow", "blue", "black"]
+    colors_ch = colors[0:len(ch)]
+    if n_features == 3:
+        ax = fig.add_subplot(111, projection='3d')
+        for color, i, target_name in zip(colors_ch, ch_label, ch):
+            ax.scatter(X[Y == i, 0], X[Y == i, 1], X[Y == i, 2], color=color, alpha=0.8,
+                       label=target_name)
+        ax.set_xlabel('feature 1')
+        ax.set_ylabel('feature 2')
+        ax.set_zlabel('feature 3')
+    elif n_features == 2:
+        for color, i, target_name in zip(colors_ch, ch_label, ch):
+            plt.scatter(X[Y == i, 0], X[Y == i, 1], color=color, alpha=0.8,
+                        label=target_name)
+        plt.xlabel('feature 1')
+        plt.ylabel('feature 2')
+    plt.legend(loc="best", shadow=False, scatterpoints=1)
+    plt.title(f'EMG Spectrum Data: Extracted {n_features} features')
+    # if n_features == 3:
+    #     plt.show()
+    print("Done")
 
 
 def extract_feature(d: dict, subject_names, channels=2, start_point=200, stop_point=7000, window_size=200):
@@ -131,7 +166,9 @@ def extract_feature(d: dict, subject_names, channels=2, start_point=200, stop_po
                 for i in range(window_size):
                     temp.append(d[fn][(k + i)][chn + 1])
                     freq.append(d[fn][(k + i)][0])
+                # feature_vector.append(integrate.simps(np.array(temp)))
                 feature_vector.append(integrate.simps(np.array(temp), np.array(freq)))
+                # feature_vector.append(integrate.simps(np.array(temp), np.array(freq), 0.061))
                 X.append(np.array(temp))
                 Y.append(chn)
             feature_vectors.append(np.array(feature_vector))
@@ -139,10 +176,12 @@ def extract_feature(d: dict, subject_names, channels=2, start_point=200, stop_po
     feature_vectors_norm = []
     for fv in feature_vectors:
         feature_vectors_norm.append(fv / sum(fv))
-    print(f"Feature matrix:\n{feature_vectors_norm}")
+    print(f"Feature matrix:\n{feature_vectors}")
+    print(f"Normalized Feature matrix:\n{feature_vectors_norm}")
     print("No of samples: {}".format(len(feature_vectors_norm)))
     print(f"Length Feature Vector: {len(feature_vectors_norm[0])}")
-    print(f"Length Feature Label: {len(feature_vectors_norm[0])}")
+    print(f"Length Feature Label: {len(feature_label)}")
+    # return np.array(X), np.array(Y), np.array(feature_vectors), np.array(feature_label)
     return np.array(X), np.array(Y), np.array(feature_vectors_norm), np.array(feature_label)
 
 

@@ -39,13 +39,13 @@ from sklearn import svm, datasets
 from sklearn.inspection import DecisionBoundaryDisplay
 #
 
-def emg_svm(emg_data, emg_data_label, C=1.0):
+def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
     X = emg_data
     y = emg_data_label
     # C: SVM regularization parameter
     models = (
         svm.SVC(kernel="linear", C=C),
-        svm.LinearSVC(C=C, max_iter=10000),
+        svm.LinearSVC(C=C, max_iter=100000),
         svm.SVC(kernel="rbf", gamma=0.7, C=C),
         svm.SVC(kernel="poly", degree=3, gamma="auto", C=C),
     )
@@ -61,10 +61,13 @@ def emg_svm(emg_data, emg_data_label, C=1.0):
 
     # Set-up 2x2 grid for plotting.
     # plt.figure()
-    fig, sub = plt.subplots(2, 2)
+    fig, sub = plt.subplots(2,2)
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
     X0, X1 = X[:, 0], X[:, 1]
-
+    if is_feature:
+        xlabel, ylabel = "feature 1", "feature 2"
+    else:
+        xlabel, ylabel = "PCA component 1", "PCA component 2"
     for clf, title, ax in zip(models, titles, sub.flatten()):
         disp = DecisionBoundaryDisplay.from_estimator(
             clf,
@@ -73,14 +76,18 @@ def emg_svm(emg_data, emg_data_label, C=1.0):
             cmap=plt.cm.coolwarm,
             alpha=0.8,
             ax=ax,
-            xlabel="PCA component 1",
-            ylabel="PCA component 2",
+            xlabel=xlabel,
+            ylabel=ylabel,
         )
         ax.scatter(X0, X1, c=y, cmap=plt.cm.coolwarm, s=20, edgecolors="k")
         ax.set_xticks(())
         ax.set_yticks(())
-        ax.set_xlim([-0.2, 0.35])
-        ax.set_ylim([-0.2, 0.35])
+        if is_feature:
+            ax.set_xlim([0.0, 1.01])
+            ax.set_ylim([0.01, 0.71])
+        else:
+            ax.set_xlim([-0.2, 0.4])
+            ax.set_ylim([-0.2, 0.4])
         ax.set_title(title)
 
     plt.show()
