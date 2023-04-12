@@ -63,9 +63,9 @@ if __name__ == '__main__':
     emg_data_pca_components = pca_analysis(emg_data, emg_label, emg_channels, pca_features)
     is_feature = (stop_point - start_point) / window_size <= 2
     if pca_features == 2:
-        if is_feature:
-            emg_svm(emg_data, emg_label, 200, is_feature)
-        else:
-            emg_svm(emg_data_pca_components, emg_label, 200, is_feature)
-        # emg_svm(X, Y, ch)
+#         if is_feature:
+#             emg_svm(emg_data, emg_label, 200, is_feature)
+#         else:
+#             emg_svm(emg_data_pca_components, emg_label, 200, is_feature)
+        emg_svm(emg_data_pca_components, emg_label, 200)
     print("Done")
