@@ -36,22 +36,33 @@ kernel and its parameters.
 
 import matplotlib.pyplot as plt
 from sklearn import svm, datasets
+from sklearn import model_selection as ms, metrics
 from sklearn.inspection import DecisionBoundaryDisplay
+
+
 #
 
 def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
     X = emg_data
     y = emg_data_label
     # C: SVM regularization parameter
+    X_train, X_test, y_train, y_test = ms.train_test_split(X, y, train_size=0.75)
     models = (
         svm.SVC(kernel="linear", C=C),
         svm.LinearSVC(C=C, max_iter=100000),
         svm.SVC(kernel="rbf", gamma=0.7, C=C),
         svm.SVC(kernel="poly", degree=3, gamma="auto", C=C),
     )
-    models = (clf.fit(X, y) for clf in models)
+    # models = (clf.fit(X, y) for clf in models)
+    # models = (clf.fit(X_train, y_train) for clf in models)
+    # models = ((clf.fit(X_train, y_train), clf.predict(X_test)) for clf in models)
+    predicts = []
+    models_dup = tuple()
+    for clf_m in models:
+        models_dup = models_dup + (clf_m.fit(X_train, y_train),)
+        predicts.append(clf_m.predict(X_test))
 
-    # title for the plots
+    models = models_dup
     titles = (
         "SVC with linear kernel",
         "LinearSVC (linear kernel)",
@@ -61,7 +72,7 @@ def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
 
     # Set-up 2x2 grid for plotting.
     # plt.figure()
-    fig, sub = plt.subplots(2,2)
+    fig, sub = plt.subplots(2, 2)
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
     X0, X1 = X[:, 0], X[:, 1]
     if is_feature:
@@ -70,8 +81,9 @@ def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
         xlabel, ylabel = "PCA component 1", "PCA component 2"
     for clf, title, ax in zip(models, titles, sub.flatten()):
         disp = DecisionBoundaryDisplay.from_estimator(
+            # clf[0],
             clf,
-            X,
+            X_train,
             response_method="predict",
             cmap=plt.cm.coolwarm,
             alpha=0.8,
@@ -89,5 +101,14 @@ def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
             ax.set_xlim([-0.2, 0.4])
             ax.set_ylim([-0.2, 0.4])
         ax.set_title(title)
+
+        # print(pred)
+    # for clf_m in models:
+    for predict, title in zip(predicts, titles):
+        print("\n--------------------------------------")
+        print(f"Confusion Matrix ({title}):\n { metrics.confusion_matrix(y_test, predict)}")
+        print(f"Accuracy Score ({title}): {metrics.accuracy_score(y_test, predict)}")
+        # print(f"Precision Score ({title}): {metrics.precision_score(y_test, predict)}")
+        # print(f"f1 Score ({title}): {metrics.f1_score(y_test, predict)}")
 
     plt.show()
