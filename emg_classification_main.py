@@ -1,5 +1,5 @@
 from emg_utility_functions import get_data_dict, extract_feature, pca_analysis, plot_emg_features
-from plot_emg_svm import emg_svm
+from plot_emg_svm import emg_svm, multi_emg_svm
 import numpy as np
 
 if __name__ == '__main__':
@@ -69,4 +69,6 @@ if __name__ == '__main__':
 #             emg_svm(emg_data_pca_components, emg_label, 200, is_feature)
         emg_svm(emg_data_pca_components, emg_label, 200)
         emg_svm(emg_data[:,0:2], emg_label, 200, True)
+    else:
+        multi_emg_svm(emg_data, emg_label, 200)
     print("Done")
