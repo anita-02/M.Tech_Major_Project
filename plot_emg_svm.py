@@ -58,7 +58,11 @@ def multi_emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
     for clf_m in models:
         models_dup = models_dup + (clf_m.fit(X_train, y_train),)
         predicts.append(clf_m.predict(X_test))
-        print(f"No of features seen during fit: {clf_m.n_features_in_}")
+        if is_feature:
+            print(f"No of pca components seen during fit: {clf_m.n_features_in_}")
+        else:
+            print(f"No of features seen during fit: {clf_m.n_features_in_}")
+
 
     for predict, title in zip(predicts, titles):
         print("\n--------------------------------------")
@@ -69,7 +73,7 @@ def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
     X = emg_data
     y = emg_data_label
     # C: SVM regularization parameter
-    X_train, X_test, y_train, y_test = ms.train_test_split(X, y, train_size=0.75)
+    X_train, X_test, y_train, y_test = ms.train_test_split(X, y, train_size=0.8)
     models = (
         svm.SVC(kernel="linear", C=C),
         svm.LinearSVC(C=C, max_iter=100000),
@@ -118,8 +122,8 @@ def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
         ax.set_xticks(())
         ax.set_yticks(())
         if is_feature:
-            ax.set_xlim([0.0, 1.01])
-            ax.set_ylim([0.01, 0.71])
+            ax.set_xlim([0.2, 0.8])
+            ax.set_ylim([0.05, 0.5])
         else:
             ax.set_xlim([-0.2, 0.4])
             ax.set_ylim([-0.2, 0.4])

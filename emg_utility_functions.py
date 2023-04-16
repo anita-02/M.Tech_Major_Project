@@ -93,10 +93,11 @@ def pca_analysis(X, Y, ch, n_features=3):
     for j, c in enumerate(ch):
         ch_label.append(j)
 
-    fig = plt.figure()
+
     colors = ["navy", "cyan", "magenta", "green", "red", "yellow", "blue", "black"]
     colors_ch = colors[0:len(ch)]
     if n_features == 3:
+        fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         for color, i, target_name in zip(colors_ch, ch_label, ch):
             ax.scatter(z[Y == i, 0], z[Y == i, 1], z[Y == i, 2], color=color, alpha=0.8,
@@ -104,14 +105,17 @@ def pca_analysis(X, Y, ch, n_features=3):
         ax.set_xlabel('PCA component 1')
         ax.set_ylabel('PCA component 2')
         ax.set_zlabel('PCA component 3')
+        plt.legend(loc="best", shadow=False, scatterpoints=1)
+        plt.title('Principal Component Analysis(PCA) for EMG Data: Dimensionality reduction')
     elif n_features == 2:
+        fig = plt.figure()
         for color, i, target_name in zip(colors_ch, ch_label, ch):
             plt.scatter(z[Y == i, 0], z[Y == i, 1], color=color, alpha=0.8,
                         label=target_name)
         plt.xlabel('PCA component 1')
         plt.ylabel('PCA component 2')
-    plt.legend(loc="best", shadow=False, scatterpoints=1)
-    plt.title('Principal Component Analysis(PCA) for EMG Data: Dimensionality reduction')
+        plt.legend(loc="best", shadow=False, scatterpoints=1)
+        plt.title('Principal Component Analysis(PCA) for EMG Data: Dimensionality reduction')
     if n_features == 3:
         plt.show()
     print("Done")

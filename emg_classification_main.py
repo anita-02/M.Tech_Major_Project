@@ -14,9 +14,9 @@ if __name__ == '__main__':
     # start_point: this is stating frequency , freq domain sampling rate : 1/0.06, start freq: 500 * 0.06 = 30Hz
     # feature width = window_size*0.06 , ex: 300 * 0.06 = 18Hz
     # end point: 5000*0.06 = 300Hz
-    start_point, stop_point, window_size = 200, 5000, 1250
-    # start_point, stop_point, window_size = 300, 6000, 300
-    pca_features = 2
+    # start_point, stop_point, window_size = 200, 5000,1250
+    start_point, stop_point, window_size = 300, 6000, 800
+    pca_features = 5
 
     sub_names_ch1_2, spectrum_data_dict_ch1_2 = get_data_dict(folder_location_ch1_2)
     X_ch1_2, Y_ch1_2, feature_vectors_norm_ch_1_2, feature_label_ch1_2 = extract_feature(spectrum_data_dict_ch1_2,
@@ -54,21 +54,24 @@ if __name__ == '__main__':
     channel_names_ch_1_to_5_m2 = channel_names_ch1 + channel_names_ch3_4 + channel_names_ch5
     # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_2, feature_label_ch1_2, channel_names_ch1_2
     # emg_data, emg_label, emg_channels = feature_vectors_norm_ch3_4, feature_label_ch3_4, channel_names_ch3_4
-    emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_5_m2, feature_label_ch_1_to_5_m2, channel_names_ch_1_to_5_m2
+    # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_5_m2, feature_label_ch_1_to_5_m2, channel_names_ch_1_to_5_m2
     # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_3_to_5, feature_label_ch_3_to_5, channel_names_ch_3_to_5
     # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_4, feature_label_ch_1_to_4, channel_names_ch_1_to_4
-    # emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_5, feature_label_ch_1_to_5, channel_names_ch_1_to_5
+    emg_data, emg_label, emg_channels = feature_vectors_norm_ch_1_to_5, feature_label_ch_1_to_5, channel_names_ch_1_to_5
     plot_emg_features(emg_data, emg_label, emg_channels, pca_features)
 
     emg_data_pca_components = pca_analysis(emg_data, emg_label, emg_channels, pca_features)
     is_feature = (stop_point - start_point) / window_size <= 2
+    for ch_lb, ch in enumerate(emg_channels):
+        print(f"{ch_lb} -> {ch}")
     if pca_features == 2:
-#         if is_feature:
-#             emg_svm(emg_data, emg_label, 200, is_feature)
-#         else:
-#             emg_svm(emg_data_pca_components, emg_label, 200, is_feature)
+        # #         if is_feature:
+        # #             emg_svm(emg_data, emg_label, 200, is_feature)
+        # #         else:
+        # #             emg_svm(emg_data_pca_components, emg_label, 200, is_feature)
         emg_svm(emg_data_pca_components, emg_label, 200)
-        emg_svm(emg_data[:,0:2], emg_label, 200, True)
+        # emg_svm(emg_data[:,0:2], emg_label, 200, True)
     else:
         multi_emg_svm(emg_data, emg_label, 200)
+        multi_emg_svm(emg_data_pca_components, emg_label, 200, True)
     print("Done")
