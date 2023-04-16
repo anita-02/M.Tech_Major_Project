@@ -41,6 +41,29 @@ from sklearn.inspection import DecisionBoundaryDisplay
 
 
 #
+def multi_emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
+    X = emg_data
+    y = emg_data_label
+    X_train, X_test, y_train, y_test = ms.train_test_split(X, y, train_size=0.75)
+    models = (
+        svm.LinearSVC(C=C, max_iter=100000),
+        svm.SVC(kernel="rbf", gamma=0.7, C=C),
+    )
+    titles = (
+        "LinearSVC (linear kernel)",
+        "SVC with RBF kernel",
+    )
+    predicts = []
+    models_dup = tuple()
+    for clf_m in models:
+        models_dup = models_dup + (clf_m.fit(X_train, y_train),)
+        predicts.append(clf_m.predict(X_test))
+        print(f"No of features seen during fit: {clf_m.n_features_in_}")
+
+    for predict, title in zip(predicts, titles):
+        print("\n--------------------------------------")
+        print(f"Confusion Matrix ({title}):\n {metrics.confusion_matrix(y_test, predict)}")
+        print(f"Accuracy Score ({title}): {metrics.accuracy_score(y_test, predict)}")
 
 def emg_svm(emg_data, emg_data_label, C=1.0, is_feature=False):
     X = emg_data
