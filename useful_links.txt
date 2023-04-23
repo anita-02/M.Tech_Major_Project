@@ -1,1 +1,2 @@
 https://www.analyticsvidhya.com/blog/2020/04/confusion-matrix-machine-learning/
+https://medium.com/analytics-vidhya/generation-of-a-concatenated-confusion-matrix-in-cross-validation-912485c4a972
