@@ -44,6 +44,23 @@ from sklearn import svm, datasets
 from sklearn.model_selection import KFold
 
 
+def plot_accuracy_graph(emg_data, emg_label):
+    a, r = 0.1, 2
+    c_list_1 = [a * r ** (i - 1) for i in range(1, 8)]
+    c_list_2 = [i for i in range(10, 400, 20)]
+    c_list = c_list_1 + c_list_2
+    c_accuracy = []
+    for c in c_list:
+        predicted_targets, actual_targets, accuracy_list = evaluate_multi_emg_svm_model(emg_data, emg_label, c)
+        # plot_confusion_matrix(predicted_targets, actual_targets)
+        c_accuracy.append(np.mean(accuracy_list))
+        print("Mean accuracy:", np.mean(accuracy_list))
+        print("Standard deviation of accuracy:", np.std(accuracy_list))
+    print(c_list)
+    print(c_accuracy)
+    plt.figure()
+    plt.plot(c_list, c_accuracy, '--b', marker="*")
+    
 def plot_confusion_matrix(predicted_labels_list, y_test_list,
                           class_names=np.array(['Calf', 'Bicep', 'Thumb', 'Masseter', 'Eye'])):
     cnf_matrix = metrics.confusion_matrix(y_test_list, predicted_labels_list)
@@ -57,7 +74,7 @@ def plot_confusion_matrix(predicted_labels_list, y_test_list,
     # Plot normalized confusion matrix
     plt.figure()
     generate_confusion_matrix(cnf_matrix, classes=class_names, normalize=True, title='Normalized confusion matrix')
-    plt.show()
+    # plt.show()
 
 
 def generate_confusion_matrix(cnf_matrix, classes, normalize=False, title='Confusion matrix'):
