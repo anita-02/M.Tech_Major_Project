@@ -38,6 +38,75 @@ import matplotlib.pyplot as plt
 from sklearn import svm, datasets
 from sklearn import model_selection as ms, metrics
 from sklearn.inspection import DecisionBoundaryDisplay
+import numpy as np
+import itertools
+from sklearn import svm, datasets
+from sklearn.model_selection import KFold
+
+
+def plot_confusion_matrix(predicted_labels_list, y_test_list,
+                          class_names=np.array(['Calf', 'Bicep', 'Thumb', 'Masseter', 'Eye'])):
+    cnf_matrix = metrics.confusion_matrix(y_test_list, predicted_labels_list)
+    np.set_printoptions(precision=2)
+
+    # Plot non-normalized confusion matrix
+    plt.figure()
+    generate_confusion_matrix(cnf_matrix, classes=class_names, title='Confusion matrix, without normalization')
+    # plt.show()
+
+    # Plot normalized confusion matrix
+    plt.figure()
+    generate_confusion_matrix(cnf_matrix, classes=class_names, normalize=True, title='Normalized confusion matrix')
+    plt.show()
+
+
+def generate_confusion_matrix(cnf_matrix, classes, normalize=False, title='Confusion matrix'):
+    if normalize:
+        cnf_matrix = cnf_matrix.astype('float') / cnf_matrix.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    plt.imshow(cnf_matrix, interpolation='nearest', cmap=plt.get_cmap('Blues'))
+    plt.title(title)
+    plt.colorbar()
+
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cnf_matrix.max() / 2.
+
+    for i, j in itertools.product(range(cnf_matrix.shape[0]), range(cnf_matrix.shape[1])):
+        plt.text(j, i, format(cnf_matrix[i, j], fmt), horizontalalignment="center",
+                 color="white" if cnf_matrix[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+
+    return cnf_matrix
+
+
+def evaluate_multi_emg_svm_model(emg_data, emg_data_label, C=1.0, is_feature=False):
+    k_fold = KFold(4, shuffle=True, random_state=1)
+    predicted_targets = np.array([])
+    actual_targets = np.array([])
+    accuracy_list = list()
+    X = emg_data
+    y = emg_data_label
+    for train_ix, test_ix in k_fold.split(X):
+        X_train, y_train, X_test, y_test = X[train_ix], y[train_ix], X[test_ix], y[test_ix]
+        clf = svm.SVC(kernel="rbf", gamma=0.7, C=C)
+        clf.fit(X_train, y_train)
+        predicted_labels = clf.predict(X_test)
+        accuracy = metrics.accuracy_score(y_test, predicted_labels)
+        predicted_targets = np.append(predicted_targets, predicted_labels)
+        actual_targets = np.append(actual_targets, y_test)
+        accuracy_list.append(accuracy)
+    return predicted_targets, actual_targets, accuracy_list
+
 
 
 #
