@@ -1,5 +1,5 @@
 from emg_utility_functions import get_data_dict, extract_feature, pca_analysis, plot_emg_features
-from plot_emg_svm import emg_svm, multi_emg_svm
+from plot_emg_svm import emg_svm, multi_emg_svm, evaluate_multi_emg_svm_model, plot_confusion_matrix
 import numpy as np
 
 if __name__ == '__main__':
@@ -74,4 +74,8 @@ if __name__ == '__main__':
     else:
         multi_emg_svm(emg_data, emg_label, 200)
         multi_emg_svm(emg_data_pca_components, emg_label, 200, True)
+        predicted_targets, actual_targets, accuracy_list = evaluate_multi_emg_svm_model(emg_data, emg_label, 200)
+        plot_confusion_matrix(predicted_targets, actual_targets)
+        print("Mean accuracy:", np.mean(accuracy_list))
+        print("Standard deviation of accuracy:", np.std(accuracy_list))
     print("Done")
