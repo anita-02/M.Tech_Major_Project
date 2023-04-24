@@ -1,6 +1,7 @@
 from emg_utility_functions import get_data_dict, extract_feature, pca_analysis, plot_emg_features
-from plot_emg_svm import emg_svm, multi_emg_svm, evaluate_multi_emg_svm_model, plot_confusion_matrix
+from plot_emg_svm import emg_svm, multi_emg_svm, evaluate_multi_emg_svm_model, plot_confusion_matrix, plot_accuracy_graph
 import numpy as np
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     folder_location_ch1_2 = 'D:/MtechProject_2023/EMG_spectrum_time_data_text_files/EMG_spectrum_ch1_2/'
@@ -78,4 +79,6 @@ if __name__ == '__main__':
         plot_confusion_matrix(predicted_targets, actual_targets)
         print("Mean accuracy:", np.mean(accuracy_list))
         print("Standard deviation of accuracy:", np.std(accuracy_list))
+        plot_accuracy_graph(emg_data, emg_label)
+    plt.show()
     print("Done")
